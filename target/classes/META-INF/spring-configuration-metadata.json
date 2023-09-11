@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "roteala.eth.processor",
+      "type": "uk.co.roteala.javaprocessor.configs.AppConfigs",
+      "sourceType": "uk.co.roteala.javaprocessor.configs.AppConfigs"
+    }
+  ],
+  "properties": [
+    {
+      "name": "roteala.eth.processor.master-key",
+      "type": "java.lang.String",
+      "sourceType": "uk.co.roteala.javaprocessor.configs.AppConfigs"
+    },
+    {
+      "name": "roteala.eth.processor.url",
+      "type": "java.lang.String",
+      "sourceType": "uk.co.roteala.javaprocessor.configs.AppConfigs"
+    }
+  ],
+  "hints": []
+}
