@@ -38,7 +38,7 @@ public class TransactionListener {
     @Autowired
     private AccountWalletRepository accountWalletRepository;
 
-    @Bean
+    //@Bean
     public void addressListener() {
         String targetAddress = "0x95206620CA29f01E5BBc7e42d781A3f383415B73";
 

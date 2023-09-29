@@ -1,0 +1,81 @@
+
+t
+java:S2293h"YReplace the type specification in this constructor call with the diamond operator ("<>").(§Úıÿÿÿÿ
+o
+java:S2293Š"YReplace the type specification in this constructor call with the diamond operator ("<>").(÷¥ÒJ
+u
+java:S2293¨"YReplace the type specification in this constructor call with the diamond operator ("<>").(âÊ‚Ïøÿÿÿÿ
+u
+java:S2293×"YReplace the type specification in this constructor call with the diamond operator ("<>").(“èÄ´şÿÿÿÿ
+u
+java:S2293î"YReplace the type specification in this constructor call with the diamond operator ("<>").(¸úàÒÿÿÿÿÿ
+u
+java:S2293ó"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÌœåŞùÿÿÿÿ
+u
+java:S2293¥"YReplace the type specification in this constructor call with the diamond operator ("<>").(¸úàÒÿÿÿÿÿ
+u
+java:S2293ª"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÌœåŞùÿÿÿÿ
+l	java:S117Ó"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÍƒŸ›ıÿÿÿÿ
+l	java:S117é"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ê÷­øÿÿÿÿ
+l	java:S117é"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ê÷­øÿÿÿÿ
+g	java:S117˜"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹àñÉ
+i
+java:S1104Ş"RMake amount a static final constant or non-public and provide accessors if needed.(ÀÕ½£
+r
+java:S1104à"VMake uniqueHash a static final constant or non-public and provide accessors if needed.(×®–™ıÿÿÿÿ
+g
+java:S1104ñ"PMake from a static final constant or non-public and provide accessors if needed.(ìÁèˆ
+h
+java:S1104ó"QMake value a static final constant or non-public and provide accessors if needed.(ŸÔ±
+r
+java:S1104õ"VMake uniqueHash a static final constant or non-public and provide accessors if needed.(×®–™ıÿÿÿÿ
+p
+java:S1104ù"TMake newOwner a static final constant or non-public and provide accessors if needed.(æŒ…Şşÿÿÿÿ
+o
+java:S1104ı"XMake removedOwner a static final constant or non-public and provide accessors if needed.(¤š¸Ø
+7
+java:S1116J"Remove this empty statement.(Åñ­õşÿÿÿÿ
+7
+java:S1116N"Remove this empty statement.(Åñ­õşÿÿÿÿ
+7
+java:S1116R"Remove this empty statement.(Åñ­õşÿÿÿÿ
+^
+java:S6355T"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+P
+java:S1133U"5Do not forget to remove this deprecated code someday.(ÎŠğ—úÿÿÿÿ
+C
+java:S1123U"(Add the missing @deprecated Javadoc tag.(ÎŠğ—úÿÿÿÿ
+^
+java:S6355]"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+K
+java:S1133^"5Do not forget to remove this deprecated code someday.(Š—œË
+>
+java:S1123^"(Add the missing @deprecated Javadoc tag.(Š—œË
+C
+java:S1905Ü"'Remove this unnecessary cast to "List".(¦³”Ãüÿÿÿÿ
+_
+java:S6355¹"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+Q
+java:S1133º"5Do not forget to remove this deprecated code someday.(Æê¹Õüÿÿÿÿ
+D
+java:S1123º"(Add the missing @deprecated Javadoc tag.(Æê¹Õüÿÿÿÿ
+_
+java:S6355¾"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+L
+java:S1133¿"5Do not forget to remove this deprecated code someday.(É¤ú¨
+?
+java:S1123¿"(Add the missing @deprecated Javadoc tag.(É¤ú¨
+_
+java:S6355Ó"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+Q
+java:S1133Ô"5Do not forget to remove this deprecated code someday.(’÷äıÿÿÿÿ
+D
+java:S1123Ô"(Add the missing @deprecated Javadoc tag.(’÷äıÿÿÿÿ
+_
+java:S6355Ø"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš
+Q
+java:S1133Ù"5Do not forget to remove this deprecated code someday.(¨ù†Áøÿÿÿÿ
+D
+java:S1123Ù"(Add the missing @deprecated Javadoc tag.(¨ù†Áøÿÿÿÿ
+G
+java:S2160İ"+Override the "equals" method in this class.(Ô••ıÿÿÿÿ
