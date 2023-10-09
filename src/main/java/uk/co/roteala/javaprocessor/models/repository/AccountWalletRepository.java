@@ -14,5 +14,5 @@ public interface AccountWalletRepository extends PagingAndSortingRepository<Acco
     @Override
     Optional<AccountWallet> findById(Integer integer);
 
-    Optional<AccountWallet> findByUniqueMerchantCode(String uniqueMerchantCode);
+    Optional<AccountWallet> findByMid(String mid);
 }

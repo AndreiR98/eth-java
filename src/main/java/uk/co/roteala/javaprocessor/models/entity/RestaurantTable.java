@@ -21,7 +21,7 @@ public class RestaurantTable extends AuditedDateEntity implements Serializable {
     @Column(name = "table_id")
     //@JsonInclude(JsonInclude.Include.NON_NULL)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tableId;
+    private Integer id;
 
     @Column(name = "table_number")
     private Integer tableNumber;

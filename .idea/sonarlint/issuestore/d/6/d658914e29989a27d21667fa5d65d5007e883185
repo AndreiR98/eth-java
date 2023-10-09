@@ -1,3 +1,6 @@
 
 [
 java:S1874"9Remove this use of "SnakeCaseStrategy"; it is deprecated.(Œ’´ıÿÿÿÿ8—…•­1
+M
+java:S1128
+"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8½•Ìµ°1

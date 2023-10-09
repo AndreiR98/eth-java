@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.web3j.protocol.core.methods.response.Log;
 import uk.co.roteala.javaprocessor.models.AuditedDateEntity;
-import uk.co.roteala.javaprocessor.models.SplitDetails;
 
 import javax.persistence.Id;
 import java.math.BigInteger;
@@ -29,12 +28,6 @@ public class TransactionCollection extends AuditedDateEntity {
 
     @Field(name = "amount")
     private BigInteger amount;
-
-    @Field(name = "receipt_split_details")
-    private List<SplitDetails> receiptSplitDetails;
-
-    @Field(name = "split_details")
-    private SplitDetails splitDetails;
 
     @Field(name = "block_number")
     private BigInteger blockNumber;

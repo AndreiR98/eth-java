@@ -10,34 +10,33 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import uk.co.roteala.javaprocessor.models.ApiError;
-import uk.co.roteala.javaprocessor.models.TransactionRequest;
-import uk.co.roteala.javaprocessor.models.TransactionResponse;
+import uk.co.roteala.javaprocessor.models.*;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import uk.co.roteala.javaprocessor.services.BillServices;
 import uk.co.roteala.javaprocessor.services.NFTServices;
 
 import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/receipt")
+@RequestMapping("/bill")
 @AllArgsConstructor
 @Tag(name = "ETH Transaction Split funding Operations", description = "The API to process the incoming transaction")
 public class NFTController {
-    private final NFTServices nftServices;
+    private final BillServices billServices;
 
     @Operation(summary = "Process incoming ETH transaction, splits it into multiple details")
-    @RequestBody(content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class)), required = true)
+    @RequestBody(content = @Content(mediaType = "application/json", schema = @Schema(implementation = BillRequest.class)), required = true)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Transaction processed!", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = TransactionResponse.class))}),
+                    schema = @Schema(implementation = BillResponse.class))}),
             @ApiResponse(responseCode = "404", description = "Invalid transaction data", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiError.class))}),
             @ApiResponse(responseCode = "400", description = "BadRequest", content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = ApiError.class))})})
-    @PostMapping("/get-token")
+    @PostMapping("/generate-bill")
     @ResponseStatus(HttpStatus.OK)
-    public TransactionResponse sendTransaction(@Valid @org.springframework.web.bind.annotation.RequestBody TransactionRequest transactionRequest){
-        return this.nftServices.processTransaction(transactionRequest);
+    public BillResponse sendTransaction(@Valid @org.springframework.web.bind.annotation.RequestBody BillRequest billRequest){
+        return this.billServices.processBill(billRequest);
     }
 }

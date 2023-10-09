@@ -42,7 +42,7 @@ public class Web3Configs {
     public Credentials walletConfigs() {
         Credentials credentials;
         try {
-            credentials = Credentials.create("06e846ab80bf042e4c45b228b092483a044f7cf4c9504c22d220c4deaefb212c");
+            credentials = Credentials.create("e76cfc1b22c4653cf8279d39373294abc3b020715311d543051fddef3aaf5e97");
             log.info("Master wallet address:{}", credentials.getAddress());
         } catch (Exception e) {
             credentials = null;

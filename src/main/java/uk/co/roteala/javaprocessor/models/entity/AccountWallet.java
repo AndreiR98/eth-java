@@ -28,14 +28,14 @@ public class AccountWallet extends AuditedDateEntity implements Serializable {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "unique_merchant_code")
-    private String uniqueMerchantCode;
+    @Column(name = "mid")
+    private String mid;
 
     @Column(name = "merchant_name")
     private String merchantName;
 
-    @Column(name = "fees")
-    private BigDecimal fees;
+    @Column(name = "fees_id")
+    private Integer feesId;
 
     @Column(name = "date_added")
     private Instant dateAdded;

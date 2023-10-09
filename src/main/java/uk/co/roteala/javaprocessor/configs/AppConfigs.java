@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfigs {
     private String url;
     private String masterKey;
+    private String contractAddress;
 }

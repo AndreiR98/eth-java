@@ -21,6 +21,4 @@ public class TransactionRequest {
     private long timeStamp;
     private BigDecimal totalAmount;
     private String from;
-    private List<SplitDetails> splitDetails;
-    private Signature signature;
 }

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import uk.co.roteala.javaprocessor.models.SplitDetails;
 
 import javax.persistence.Id;
 import java.math.BigInteger;
@@ -52,7 +51,4 @@ public class ReceiptCollection {
 
     @Field(name = "time_stamp")
     private Instant timeStamp;
-
-    @Field(name = "split_details")
-    private List<SplitDetails> splitDetails;
 }
