@@ -473,7 +473,6 @@
                         </pathPrefixes>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>

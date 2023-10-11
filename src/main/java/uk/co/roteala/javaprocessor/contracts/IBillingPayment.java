@@ -47,6 +47,8 @@ public class IBillingPayment extends Contract {
 
     public static final String FUNC_CREATEBILL = "createBill";
 
+    public static final String FUNC_GETBILLDETAILS = "getBillDetails";
+
     public static final String FUNC_GETBILLSFORMERCHANT = "getBillsForMerchant";
 
     public static final String FUNC_GETRECEIPTS = "getReceipts";
@@ -58,15 +60,11 @@ public class IBillingPayment extends Contract {
     ;
 
     public static final Event BILLPROCESSED_EVENT = new Event("BillProcessed", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}, new TypeReference<BillModel>() {}));
     ;
 
     public static final Event PAYMENTRECEIVED_EVENT = new Event("PaymentReceived", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-    ;
-
-    public static final Event RECEIPTGENERATED_EVENT = new Event("ReceiptGenerated", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+            Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}, new TypeReference<Payment>() {}));
     ;
 
     @Deprecated
@@ -126,6 +124,7 @@ public class IBillingPayment extends Contract {
             BillProcessedEventResponse typedResponse = new BillProcessedEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse._billUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse._bill = (BillModel) eventValues.getNonIndexedValues().get(1);
             responses.add(typedResponse);
         }
         return responses;
@@ -136,6 +135,7 @@ public class IBillingPayment extends Contract {
         BillProcessedEventResponse typedResponse = new BillProcessedEventResponse();
         typedResponse.log = log;
         typedResponse._billUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse._bill = (BillModel) eventValues.getNonIndexedValues().get(1);
         return typedResponse;
     }
 
@@ -156,6 +156,7 @@ public class IBillingPayment extends Contract {
             PaymentReceivedEventResponse typedResponse = new PaymentReceivedEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse._paymentUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            typedResponse._payment = (Payment) eventValues.getNonIndexedValues().get(1);
             responses.add(typedResponse);
         }
         return responses;
@@ -166,6 +167,7 @@ public class IBillingPayment extends Contract {
         PaymentReceivedEventResponse typedResponse = new PaymentReceivedEventResponse();
         typedResponse.log = log;
         typedResponse._paymentUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
+        typedResponse._payment = (Payment) eventValues.getNonIndexedValues().get(1);
         return typedResponse;
     }
 
@@ -179,37 +181,7 @@ public class IBillingPayment extends Contract {
         return paymentReceivedEventFlowable(filter);
     }
 
-    public static List<ReceiptGeneratedEventResponse> getReceiptGeneratedEvents(TransactionReceipt transactionReceipt) {
-        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(RECEIPTGENERATED_EVENT, transactionReceipt);
-        ArrayList<ReceiptGeneratedEventResponse> responses = new ArrayList<ReceiptGeneratedEventResponse>(valueList.size());
-        for (Contract.EventValuesWithLog eventValues : valueList) {
-            ReceiptGeneratedEventResponse typedResponse = new ReceiptGeneratedEventResponse();
-            typedResponse.log = eventValues.getLog();
-            typedResponse._receiptUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
-            responses.add(typedResponse);
-        }
-        return responses;
-    }
-
-    public static ReceiptGeneratedEventResponse getReceiptGeneratedEventFromLog(Log log) {
-        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(RECEIPTGENERATED_EVENT, log);
-        ReceiptGeneratedEventResponse typedResponse = new ReceiptGeneratedEventResponse();
-        typedResponse.log = log;
-        typedResponse._receiptUniqueId = (String) eventValues.getNonIndexedValues().get(0).getValue();
-        return typedResponse;
-    }
-
-    public Flowable<ReceiptGeneratedEventResponse> receiptGeneratedEventFlowable(EthFilter filter) {
-        return web3j.ethLogFlowable(filter).map(log -> getReceiptGeneratedEventFromLog(log));
-    }
-
-    public Flowable<ReceiptGeneratedEventResponse> receiptGeneratedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
-        filter.addSingleTopic(EventEncoder.encode(RECEIPTGENERATED_EVENT));
-        return receiptGeneratedEventFlowable(filter);
-    }
-
-    public RemoteFunctionCall<TransactionReceipt> createBill(String _billUniqueId, BigInteger _billAmount, BigInteger _txAmount, BigInteger _tipAmount, BigInteger _revenueAmount, String _processDate, String _billTimeStamp, String _merchantAddress, String _metaData) {
+    public RemoteFunctionCall<TransactionReceipt> createBill(String _billUniqueId, BigInteger _billAmount, BigInteger _txAmount, BigInteger _tipAmount, BigInteger _revenueAmount, String _processDate, String _billTimeStamp, String _merchantAddress, String processorAddress, String _metaData) {
         final Function function = new Function(
                 FUNC_CREATEBILL, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(_billUniqueId), 
@@ -220,9 +192,17 @@ public class IBillingPayment extends Contract {
                 new org.web3j.abi.datatypes.Utf8String(_processDate), 
                 new org.web3j.abi.datatypes.Utf8String(_billTimeStamp), 
                 new org.web3j.abi.datatypes.Address(160, _merchantAddress), 
+                new org.web3j.abi.datatypes.Address(160, processorAddress), 
                 new org.web3j.abi.datatypes.Utf8String(_metaData)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<BillDetails> getBillDetails(String _billUniqueId) {
+        final Function function = new Function(FUNC_GETBILLDETAILS, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(_billUniqueId)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<BillDetails>() {}));
+        return executeRemoteCallSingleValueReturn(function, BillDetails.class);
     }
 
     public RemoteFunctionCall<List> getBillsForMerchant(String _merchantAddress) {
@@ -255,10 +235,15 @@ public class IBillingPayment extends Contract {
                 });
     }
 
-    public RemoteFunctionCall<TransactionReceipt> pay(String _billUniqueId, BigInteger weiValue) {
+    public RemoteFunctionCall<TransactionReceipt> pay(String _billUniqueId, String _uniquePaymentId, BigInteger _amount, BigInteger _splitNumber, String _splitType, String _timeStamp, BigInteger weiValue) {
         final Function function = new Function(
                 FUNC_PAY, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(_billUniqueId)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(_billUniqueId), 
+                new org.web3j.abi.datatypes.Utf8String(_uniquePaymentId), 
+                new org.web3j.abi.datatypes.generated.Uint256(_amount), 
+                new org.web3j.abi.datatypes.generated.Uint256(_splitNumber), 
+                new org.web3j.abi.datatypes.Utf8String(_splitType), 
+                new org.web3j.abi.datatypes.Utf8String(_timeStamp)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function, weiValue);
     }
@@ -322,9 +307,11 @@ public class IBillingPayment extends Contract {
 
         public String merchantAddress;
 
+        public String processorAddress;
+
         public String metaData;
 
-        public BillModel(String billUniqueId, BigInteger billAmount, BigInteger txAmount, BigInteger tipAmount, BigInteger revenueAmount, BigInteger payedAmount, Boolean processed, String processDate, List<String> payments, String billTimeStamp, String merchantAddress, String metaData) {
+        public BillModel(String billUniqueId, BigInteger billAmount, BigInteger txAmount, BigInteger tipAmount, BigInteger revenueAmount, BigInteger payedAmount, Boolean processed, String processDate, List<String> payments, String billTimeStamp, String merchantAddress, String processorAddress, String metaData) {
             super(new org.web3j.abi.datatypes.Utf8String(billUniqueId), 
                     new org.web3j.abi.datatypes.generated.Uint256(billAmount), 
                     new org.web3j.abi.datatypes.generated.Uint256(txAmount), 
@@ -338,6 +325,7 @@ public class IBillingPayment extends Contract {
                             org.web3j.abi.Utils.typeMap(payments, org.web3j.abi.datatypes.Utf8String.class)), 
                     new org.web3j.abi.datatypes.Utf8String(billTimeStamp), 
                     new org.web3j.abi.datatypes.Address(160, merchantAddress), 
+                    new org.web3j.abi.datatypes.Address(160, processorAddress), 
                     new org.web3j.abi.datatypes.Utf8String(metaData));
             this.billUniqueId = billUniqueId;
             this.billAmount = billAmount;
@@ -350,11 +338,12 @@ public class IBillingPayment extends Contract {
             this.payments = payments;
             this.billTimeStamp = billTimeStamp;
             this.merchantAddress = merchantAddress;
+            this.processorAddress = processorAddress;
             this.metaData = metaData;
         }
 
-        public BillModel(Utf8String billUniqueId, Uint256 billAmount, Uint256 txAmount, Uint256 tipAmount, Uint256 revenueAmount, Uint256 payedAmount, Bool processed, Utf8String processDate, DynamicArray<Utf8String> payments, Utf8String billTimeStamp, Address merchantAddress, Utf8String metaData) {
-            super(billUniqueId, billAmount, txAmount, tipAmount, revenueAmount, payedAmount, processed, processDate, payments, billTimeStamp, merchantAddress, metaData);
+        public BillModel(Utf8String billUniqueId, Uint256 billAmount, Uint256 txAmount, Uint256 tipAmount, Uint256 revenueAmount, Uint256 payedAmount, Bool processed, Utf8String processDate, DynamicArray<Utf8String> payments, Utf8String billTimeStamp, Address merchantAddress, Address processorAddress, Utf8String metaData) {
+            super(billUniqueId, billAmount, txAmount, tipAmount, revenueAmount, payedAmount, processed, processDate, payments, billTimeStamp, merchantAddress, processorAddress, metaData);
             this.billUniqueId = billUniqueId.getValue();
             this.billAmount = billAmount.getValue();
             this.txAmount = txAmount.getValue();
@@ -366,29 +355,113 @@ public class IBillingPayment extends Contract {
             this.payments = payments.getValue().stream().map(v -> v.getValue()).collect(Collectors.toList());
             this.billTimeStamp = billTimeStamp.getValue();
             this.merchantAddress = merchantAddress.getValue();
+            this.processorAddress = processorAddress.getValue();
+            this.metaData = metaData.getValue();
+        }
+    }
+
+    public static class Payment extends DynamicStruct {
+        public String uniquePaymentId;
+
+        public BigInteger amount;
+
+        public String timeStamp;
+
+        public String billUniqueId;
+
+        public String clientAddress;
+
+        public Payment(String uniquePaymentId, BigInteger amount, String timeStamp, String billUniqueId, String clientAddress) {
+            super(new org.web3j.abi.datatypes.Utf8String(uniquePaymentId), 
+                    new org.web3j.abi.datatypes.generated.Uint256(amount), 
+                    new org.web3j.abi.datatypes.Utf8String(timeStamp), 
+                    new org.web3j.abi.datatypes.Utf8String(billUniqueId), 
+                    new org.web3j.abi.datatypes.Address(160, clientAddress));
+            this.uniquePaymentId = uniquePaymentId;
+            this.amount = amount;
+            this.timeStamp = timeStamp;
+            this.billUniqueId = billUniqueId;
+            this.clientAddress = clientAddress;
+        }
+
+        public Payment(Utf8String uniquePaymentId, Uint256 amount, Utf8String timeStamp, Utf8String billUniqueId, Address clientAddress) {
+            super(uniquePaymentId, amount, timeStamp, billUniqueId, clientAddress);
+            this.uniquePaymentId = uniquePaymentId.getValue();
+            this.amount = amount.getValue();
+            this.timeStamp = timeStamp.getValue();
+            this.billUniqueId = billUniqueId.getValue();
+            this.clientAddress = clientAddress.getValue();
+        }
+    }
+
+    public static class BillDetails extends DynamicStruct {
+        public String billUniqueId;
+
+        public BigInteger billAmount;
+
+        public BigInteger txAmount;
+
+        public BigInteger tipAmount;
+
+        public String billTimeStamp;
+
+        public String metaData;
+
+        public BillDetails(String billUniqueId, BigInteger billAmount, BigInteger txAmount, BigInteger tipAmount, String billTimeStamp, String metaData) {
+            super(new org.web3j.abi.datatypes.Utf8String(billUniqueId), 
+                    new org.web3j.abi.datatypes.generated.Uint256(billAmount), 
+                    new org.web3j.abi.datatypes.generated.Uint256(txAmount), 
+                    new org.web3j.abi.datatypes.generated.Uint256(tipAmount), 
+                    new org.web3j.abi.datatypes.Utf8String(billTimeStamp), 
+                    new org.web3j.abi.datatypes.Utf8String(metaData));
+            this.billUniqueId = billUniqueId;
+            this.billAmount = billAmount;
+            this.txAmount = txAmount;
+            this.tipAmount = tipAmount;
+            this.billTimeStamp = billTimeStamp;
+            this.metaData = metaData;
+        }
+
+        public BillDetails(Utf8String billUniqueId, Uint256 billAmount, Uint256 txAmount, Uint256 tipAmount, Utf8String billTimeStamp, Utf8String metaData) {
+            super(billUniqueId, billAmount, txAmount, tipAmount, billTimeStamp, metaData);
+            this.billUniqueId = billUniqueId.getValue();
+            this.billAmount = billAmount.getValue();
+            this.txAmount = txAmount.getValue();
+            this.tipAmount = tipAmount.getValue();
+            this.billTimeStamp = billTimeStamp.getValue();
             this.metaData = metaData.getValue();
         }
     }
 
     public static class ReceiptModel extends DynamicStruct {
-        public String uniqueReceiptId;
+        public String uniquePaymentId;
+
+        public String timeStamp;
+
+        public BigInteger billAmount;
 
         public String billUniqueId;
 
         public BigInteger amount;
 
-        public ReceiptModel(String uniqueReceiptId, String billUniqueId, BigInteger amount) {
-            super(new org.web3j.abi.datatypes.Utf8String(uniqueReceiptId), 
+        public ReceiptModel(String uniquePaymentId, String timeStamp, BigInteger billAmount, String billUniqueId, BigInteger amount) {
+            super(new org.web3j.abi.datatypes.Utf8String(uniquePaymentId), 
+                    new org.web3j.abi.datatypes.Utf8String(timeStamp), 
+                    new org.web3j.abi.datatypes.generated.Uint256(billAmount), 
                     new org.web3j.abi.datatypes.Utf8String(billUniqueId), 
                     new org.web3j.abi.datatypes.generated.Uint256(amount));
-            this.uniqueReceiptId = uniqueReceiptId;
+            this.uniquePaymentId = uniquePaymentId;
+            this.timeStamp = timeStamp;
+            this.billAmount = billAmount;
             this.billUniqueId = billUniqueId;
             this.amount = amount;
         }
 
-        public ReceiptModel(Utf8String uniqueReceiptId, Utf8String billUniqueId, Uint256 amount) {
-            super(uniqueReceiptId, billUniqueId, amount);
-            this.uniqueReceiptId = uniqueReceiptId.getValue();
+        public ReceiptModel(Utf8String uniquePaymentId, Utf8String timeStamp, Uint256 billAmount, Utf8String billUniqueId, Uint256 amount) {
+            super(uniquePaymentId, timeStamp, billAmount, billUniqueId, amount);
+            this.uniquePaymentId = uniquePaymentId.getValue();
+            this.timeStamp = timeStamp.getValue();
+            this.billAmount = billAmount.getValue();
             this.billUniqueId = billUniqueId.getValue();
             this.amount = amount.getValue();
         }
@@ -402,13 +475,13 @@ public class IBillingPayment extends Contract {
 
     public static class BillProcessedEventResponse extends BaseEventResponse {
         public String _billUniqueId;
+
+        public BillModel _bill;
     }
 
     public static class PaymentReceivedEventResponse extends BaseEventResponse {
         public String _paymentUniqueId;
-    }
 
-    public static class ReceiptGeneratedEventResponse extends BaseEventResponse {
-        public String _receiptUniqueId;
+        public Payment _payment;
     }
 }
