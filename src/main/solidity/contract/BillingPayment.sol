@@ -29,6 +29,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
         address payable processorAddress;
         string metaData;
     }
+
     struct BillDetails {
         string billUniqueId;
         uint256 billAmount;
@@ -44,6 +45,17 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
         uint256 billAmount;
         string billUniqueId;
         uint256 amount;
+    }
+
+    struct BillingDTO {
+        string uniquePaymentId;
+        string timeStamp;
+        uint256 billAmount;
+        string billUniqueId;
+        uint256 amount;
+        uint256 tipAmount;
+        string billTimeStamp;
+        string metaData;
     }
 
 /**
@@ -88,7 +100,7 @@ interface IBillingPayment {
         string memory _timeStamp) external payable;
 
     //Get all receipts for specific address
-    function getReceipts(address _address) external view returns (ReceiptModel[] memory);
+    function getReceiptsPerAddress(address _address) external view returns (BillingDTO[] memory);
 
     function getBillsForMerchant(address _merchantAddress) external view returns (BillModel[] memory);
 
@@ -210,7 +222,6 @@ contract BillingPayment is IBillingPayment, Ownable, ReentrancyGuard {
         }
     }
 
-    function getReceipts(address _address) external view returns (ReceiptModel[] memory) {}
 
     /**
     *Return the all bills for a specific merchant address
@@ -259,10 +270,29 @@ contract BillingPayment is IBillingPayment, Ownable, ReentrancyGuard {
         return details;
     }
 
-    function getReceiptsPerAddress(address _address) external view returns (ReceiptModel[] memory) {
+    function getReceiptsPerAddress(address _address) external view returns (BillingDTO[] memory) {
         ReceiptModel[] storage receipts = receiptsStorage[_address];
+        BillingDTO[] memory billingDTOs = new BillingDTO[](receipts.length);
 
-        return receipts;
+        for(uint256 i = 0; i < receipts.length; i++) {
+            BillModel storage bill = billsStorage[receipts[i].billUniqueId];
+            require(bytes(bill.billUniqueId).length > 0, "Bill does not exist");
+
+            BillingDTO memory dto = BillingDTO({
+                uniquePaymentId: receipts[i].uniquePaymentId,
+                timeStamp: receipts[i].timeStamp,
+                billAmount: bill.billAmount,
+                billUniqueId: bill.billUniqueId,
+                amount: receipts[i].amount,
+                tipAmount: bill.tipAmount,
+                billTimeStamp: bill.billTimeStamp,
+                metaData: bill.metaData
+            });
+
+            billingDTOs[i] = dto;
+        }
+
+        return billingDTOs;
     }
 }
 

@@ -51,7 +51,7 @@ public class IBillingPayment extends Contract {
 
     public static final String FUNC_GETBILLSFORMERCHANT = "getBillsForMerchant";
 
-    public static final String FUNC_GETRECEIPTS = "getReceipts";
+    public static final String FUNC_GETRECEIPTSPERADDRESS = "getReceiptsPerAddress";
 
     public static final String FUNC_PAY = "pay";
 
@@ -220,10 +220,10 @@ public class IBillingPayment extends Contract {
                 });
     }
 
-    public RemoteFunctionCall<List> getReceipts(String _address) {
-        final Function function = new Function(FUNC_GETRECEIPTS, 
+    public RemoteFunctionCall<List> getReceiptsPerAddress(String _address) {
+        final Function function = new Function(FUNC_GETRECEIPTSPERADDRESS, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, _address)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<ReceiptModel>>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<BillingDTO>>() {}));
         return new RemoteFunctionCall<List>(function,
                 new Callable<List>() {
                     @Override
@@ -433,7 +433,7 @@ public class IBillingPayment extends Contract {
         }
     }
 
-    public static class ReceiptModel extends DynamicStruct {
+    public static class BillingDTO extends DynamicStruct {
         public String uniquePaymentId;
 
         public String timeStamp;
@@ -444,26 +444,41 @@ public class IBillingPayment extends Contract {
 
         public BigInteger amount;
 
-        public ReceiptModel(String uniquePaymentId, String timeStamp, BigInteger billAmount, String billUniqueId, BigInteger amount) {
+        public BigInteger tipAmount;
+
+        public String billTimeStamp;
+
+        public String metaData;
+
+        public BillingDTO(String uniquePaymentId, String timeStamp, BigInteger billAmount, String billUniqueId, BigInteger amount, BigInteger tipAmount, String billTimeStamp, String metaData) {
             super(new org.web3j.abi.datatypes.Utf8String(uniquePaymentId), 
                     new org.web3j.abi.datatypes.Utf8String(timeStamp), 
                     new org.web3j.abi.datatypes.generated.Uint256(billAmount), 
                     new org.web3j.abi.datatypes.Utf8String(billUniqueId), 
-                    new org.web3j.abi.datatypes.generated.Uint256(amount));
+                    new org.web3j.abi.datatypes.generated.Uint256(amount), 
+                    new org.web3j.abi.datatypes.generated.Uint256(tipAmount), 
+                    new org.web3j.abi.datatypes.Utf8String(billTimeStamp), 
+                    new org.web3j.abi.datatypes.Utf8String(metaData));
             this.uniquePaymentId = uniquePaymentId;
             this.timeStamp = timeStamp;
             this.billAmount = billAmount;
             this.billUniqueId = billUniqueId;
             this.amount = amount;
+            this.tipAmount = tipAmount;
+            this.billTimeStamp = billTimeStamp;
+            this.metaData = metaData;
         }
 
-        public ReceiptModel(Utf8String uniquePaymentId, Utf8String timeStamp, Uint256 billAmount, Utf8String billUniqueId, Uint256 amount) {
-            super(uniquePaymentId, timeStamp, billAmount, billUniqueId, amount);
+        public BillingDTO(Utf8String uniquePaymentId, Utf8String timeStamp, Uint256 billAmount, Utf8String billUniqueId, Uint256 amount, Uint256 tipAmount, Utf8String billTimeStamp, Utf8String metaData) {
+            super(uniquePaymentId, timeStamp, billAmount, billUniqueId, amount, tipAmount, billTimeStamp, metaData);
             this.uniquePaymentId = uniquePaymentId.getValue();
             this.timeStamp = timeStamp.getValue();
             this.billAmount = billAmount.getValue();
             this.billUniqueId = billUniqueId.getValue();
             this.amount = amount.getValue();
+            this.tipAmount = tipAmount.getValue();
+            this.billTimeStamp = billTimeStamp.getValue();
+            this.metaData = metaData.getValue();
         }
     }
 

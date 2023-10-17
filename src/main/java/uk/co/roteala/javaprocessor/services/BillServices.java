@@ -59,7 +59,7 @@ public class BillServices {
         BillingPayment contract = BillingPayment
                 .load(configs.getContractAddress(), web3j, credentials, gasProvider);
 
-            ContractProcessor processor = new ContractProcessor(credentials, web3j, contract, gasProvider, configs);
+            ContractProcessor processor = new ContractProcessor(contract, configs);
 
 
             Optional<AccountWallet> accountWalletOptional = this.accountWalletRepository
